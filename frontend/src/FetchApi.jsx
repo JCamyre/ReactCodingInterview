@@ -25,27 +25,50 @@ function GetApi(){
 // Display username and profile pic
 // Could split up into more files, but it find
 function FetchApi() {
-    // const [data, setData] = useState('');
-    const [name, setName] = useState('');
-    const [profileImg, setProfileImg] = useState('');
+    const [users, setUsers] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     // Best to put the API getting logic (GetApi) in a separate file (like an API components folder) separate from this FetchApi.jsx file
     useEffect(() => {
-        GetApi().then((result) => {
-            // setData(result);
-            if (result) {
-                console.log(result['data']['results'][0]['picture']['medium']);
-                setName(result['data']['results'][0]['name']['first'] + ' ' + result['data']['results'][0]['name']['last']);
-                setProfileImg(result['data']['results'][0]['picture']['large'])
-            }
-        })
+        var temp = [];
+        // for loop -> make a call each time, add to temp, after loop, setUsers(temp)
+        for(let i=0;i<10;i++) {
+            GetApi().then((result) => {
+                // setData(result);
+                if (result) {
+                    console.log(result['data']['results'][0]['picture']['medium']);
+                    // could do a dictionary. name: result['name']
+                    temp.push([result['data']['results'][0]['name']['first'] + ' ' + result['data']['results'][0]['name']['last'], result['data']['results'][0]['picture']['large']]);
+                }
+            }); 
+        }
+        setUsers(temp);
+        setIsLoading(false);
+        // Given GetApi() returns a list of 'data', I'll just act on element
+
     }, []); // [data] doesn't work here since it checks the "next" value to the current value and since this api returns random data every time, always update, so we just have it empty so it will only load once (on page load). 
 
 
     return (
         <div>
-            <img alt='Profile pic' src={profileImg} />
-            <h2>{name}</h2>
+            {!isLoading && users.map((user) => {
+                console.log(user[0]);
+                // <div>
+                //     <h3>{user[0]}</h3>
+                //     <img alt='profile pic' src={user[1]} />
+                // </div>
+            })}
+            {!isLoading && (
+                <>
+                    {users.map((user) => (
+                    <div>
+                        <h3>{user[0]}</h3>
+                        <img alt='profile pic' src={user[1]} />
+                    </div>
+                    ))}
+                </>
+            )}
+
         </div>
     )
 }
