@@ -4,6 +4,9 @@ import axios from 'axios';
 // Make a call and display contents from https://randomuser.me/api
 // Might need to do response.data
 
+
+// never used the interface keyword before. I think it is typescript only
+
 function GetApi(){
 
     // You return the get function, and then inside the function you return the JSON. Don't forget for axios two returns. 
@@ -25,7 +28,7 @@ function GetApi(){
 // Display username and profile pic
 // Could split up into more files, but it find
 function FetchApi() {
-    const [users, setUsers] = useState('');
+    const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Best to put the API getting logic (GetApi) in a separate file (like an API components folder) separate from this FetchApi.jsx file
@@ -36,8 +39,8 @@ function FetchApi() {
             GetApi().then((result) => {
                 // setData(result);
                 if (result) {
-                    console.log(result['data']['results'][0]['picture']['medium']);
                     // could do a dictionary. name: result['name']
+                    console.log(result.results);
                     temp.push([result['data']['results'][0]['name']['first'] + ' ' + result['data']['results'][0]['name']['last'], result['data']['results'][0]['picture']['large']]);
                 }
             }); 
@@ -48,26 +51,25 @@ function FetchApi() {
 
     }, []); // [data] doesn't work here since it checks the "next" value to the current value and since this api returns random data every time, always update, so we just have it empty so it will only load once (on page load). 
 
+    console.log(isLoading, users[0]);
+    const getFullUserName = (user) => {
+        // This is some cool code: Set the variables first, last equal to user['name'], thanks to the {name: }. 
+        // This might be typescript lol: const {name: {first, last}} = user;
+        const [first, last] = user['name'];
+        return `${first} ${last}`;
+    }
 
     return (
         <div>
-            {!isLoading && users.map((user) => {
-                console.log(user[0]);
-                // <div>
-                //     <h3>{user[0]}</h3>
-                //     <img alt='profile pic' src={user[1]} />
-                // </div>
-            })}
-            {!isLoading && (
-                <>
-                    {users.map((user) => (
-                    <div>
-                        <h3>{user[0]}</h3>
-                        <img alt='profile pic' src={user[1]} />
-                    </div>
-                    ))}
-                </>
-            )}
+            {['a', 'b', 'c'].map((element) => (
+                <h2>{element}</h2>
+            ))}
+            {users.map((user, index) => (
+                <div key={index}>
+                    <h3>{getFullUserName(user)}</h3>
+                    <h1>yo</h1>
+                </div>
+            ))}
 
         </div>
     )
