@@ -30,17 +30,19 @@ function GetApi(page){
 function FetchApi() {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(0);
+    const [test, setTest] = useState([])
 
     // Best to put the API getting logic (GetApi) in a separate file (like an API components folder) separate from this FetchApi.jsx file
     useEffect(() => {
         GetApi(page)
         .then((result) => {
-            setUsers(result);
+            // users.push(result);
+            setUsers([result['data']['results']]);
         })
 
     }, []); // [data] doesn't work here since it checks the "next" value to the current value and since this api returns random data every time, always update, so we just have it empty so it will only load once (on page load). 
 
-    console.log(typeof users, typeof []);
+    console.log(users);
 
     const getFullUserName = (user) => {
         // This is some cool code: Set the variables first, last equal to user['name'], thanks to the {name: }. 
@@ -59,19 +61,19 @@ function FetchApi() {
         <div>
 
             {
-                users.map((user, index) => {
-                    console.log(user);
-                })
+                users.map((element, index) => (
+                    <h2>{element}</h2>
+                ))
             }
 
-            {
+            {/* {
                 users.map((user, index) => (
                     <div key={index}>
-                        {/* <h3>{getFullUserName(user)}</h3> */}
+                        <h3>{getFullUserName(user)}</h3>
                         <h1>{user['name']}</h1>
                     </div>
                 ))
-            }
+            } */}
             <button onClick={() => {
                 loadNextUser(page, users);
             }}>
