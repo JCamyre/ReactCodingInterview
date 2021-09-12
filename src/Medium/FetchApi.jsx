@@ -6,10 +6,8 @@ import axios from 'axios';
 function fetchData() { // could do const fetchData = () => {}
     return axios.get('https://randomuser.me/api/?results=20')
     .then((res) => {
-        // console.log(results['data']['results'], typeof results['data']['results']);
         const {results} = res.data; // Cool way of getting {results} = res.data.results. Ig {} gets the column results and sets it equal to {results} ?
         // Yes cause if you do const {data} = res; you have a dictionary with a key 'results'. 
-        console.log(results);
         return results; // results.data.results
     }).catch((err) => {
         console.error(err);
@@ -27,7 +25,7 @@ function FetchApi() {
             for (let i=0; i < apiUsers.length; i++){
                 let location = apiUsers[i]['location'];
                 // Could do some fancy dictionary variable setting or smth
-                // maybe const {longitude, latitude}
+                // Could probably do this in one line somehow
                 let {longitude, latitude} = location['coordinates'];
                 let {number, name} = location.street;
                 let {description, offset} = location['timezone']
@@ -37,8 +35,6 @@ function FetchApi() {
                 'name': name, 'description': description, 'offset': offset};
                 apiUsers[i] = location;
             }
-
-            console.log(apiUsers);
             setUserLocations(apiUsers);
         })
     }, []);
@@ -51,9 +47,9 @@ function FetchApi() {
             <table>
                 <thead>
                     <tr>
-                        {userLocations[0].map((feature, idx) => (
+                        {Object.keys(userLocations[0]).map((column, idx) => (
                             <td index={idx}>
-                                {feature}
+                                {column}
                             </td>
                         ))}
                     </tr>
