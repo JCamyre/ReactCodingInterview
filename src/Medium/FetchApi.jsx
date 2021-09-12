@@ -17,7 +17,7 @@ function fetchData() { // could do const fetchData = () => {}
 function FetchApi() {
     const [userLocations, setUserLocations] = useState([]);
     // Back to scuffed because it broke for some reason
-    const [columns, setColumns] = useState([]);
+    const [columnHeaders, setColumnHeaders] = useState([]);
 
     // on page load: run fetchData()
     // .then() => {} takes care of the promisers, listeners, async/await, all that crud (create, read, update, delete). LOLL!
@@ -26,7 +26,8 @@ function FetchApi() {
         fetchData()
         .then((apiUsers) => {
             // BRuh I am so stupid, why would I use for loop when I could just use .map(). L. .map() everything. enumerate()
-            apiUsers.map((user, i) => {
+            // Could modularize and make this it's own function
+            apiUsers.forEach((user, i) => {
                 let location = user['location'];
                 // Could do some fancy dictionary variable setting or smth
                 // Could probably do this in one line somehow
@@ -34,12 +35,14 @@ function FetchApi() {
                 let {number, name} = location.street;
                 let {description, offset} = location['timezone']
                 // could do a dictionary instead of list. {'city': location.city, etc.}
+                // Could do dynamically (add as function) (not manually where you specify every key you want, cause what if more columns that you want but didn't account for manually)
+                // Doing manual is fine since you know the keys for the api
                 location = {'city': location.city, 'longitude': longitude, 'latitude': latitude, 
                 'country': location.country, 'postcode': location['postcode'], 'state': location.state, 'number': number, 
                 'name': name, 'description': description, 'offset': offset};
                 apiUsers[i] = location;
             })
-            setColumns(Object.keys(apiUsers[0]));
+            setColumnHeaders(Object.keys(apiUsers[0]));
             setUserLocations(apiUsers);
         })
     }, []);
@@ -52,26 +55,21 @@ function FetchApi() {
             <table>
                 <thead style={{fontSize: '24px', fontWeight: 'bold'}}>
                     <tr>
-                        {columns.map((column, idx) => (
-                            <td index={idx}>
-                                {column}
-                            </td>
-                        ))}
+                    {/* Object.keys(columnHeaders[0]) */}
+                        {columnHeaders.map((column, columnIdx) => (
+                                <td index={columnIdx}>
+                                    {column}
+                                </td>
+                            ))}
                     </tr>
                 </thead>
                 <tbody>
+                        {/* I did this so badly lol. Redoing. */}
                         {userLocations.map((location, idx) => (
                             <tr key={idx}>
-                                <td>{location['city']}</td>
-                                <td>{location['longitude']}</td>
-                                <td>{location['latitude']}</td>
-                                <td>{location['country']}</td>
-                                <td>{location['postcode']}</td>
-                                <td>{location['state']}</td>
-                                <td>{location['number']}</td>
-                                <td>{location['name']}</td>
-                                <td>{location['description']}</td>
-                                <td>{location['offset']}</td>
+                                {columnHeaders.map((column, idx) => (
+                                    <td key={idx}>{location[column]}</td>
+                                ))}
                             </tr>
                         ))}
                 </tbody>
