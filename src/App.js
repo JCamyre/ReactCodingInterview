@@ -1,12 +1,12 @@
 import logo from "./logo.svg";
 import "./App.css";
-import ButtonCounter from "./ButtonCounter";
-import FetchApi from "./FetchApi.jsx";
+// import ButtonCounter from "./Easy/ButtonCounter";
+// import FetchApi from "./Easy/FetchApi.jsx";
+import FetchApi from "./Medium/FetchApi";
 
 function App() {
   return (
     <div className="App">
-      <ButtonCounter />
       <FetchApi />
     </div>
   );
