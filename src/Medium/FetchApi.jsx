@@ -21,11 +21,13 @@ function FetchApi() {
 
     // on page load: run fetchData()
     // .then() => {} takes care of the promisers, listeners, async/await, all that crud (create, read, update, delete). LOLL!
+    // not caring about users, setUsers any more.
     useEffect(() => {
         fetchData()
         .then((apiUsers) => {
-            for (let i=0; i < apiUsers.length; i++){
-                let location = apiUsers[i]['location'];
+            // BRuh I am so stupid, why would I use for loop when I could just use .map(). L. .map() everything. enumerate()
+            apiUsers.map((user, i) => {
+                let location = user['location'];
                 // Could do some fancy dictionary variable setting or smth
                 // Could probably do this in one line somehow
                 let {longitude, latitude} = location['coordinates'];
@@ -36,7 +38,7 @@ function FetchApi() {
                 'country': location.country, 'postcode': location['postcode'], 'state': location.state, 'number': number, 
                 'name': name, 'description': description, 'offset': offset};
                 apiUsers[i] = location;
-            }
+            })
             setColumns(Object.keys(apiUsers[0]));
             setUserLocations(apiUsers);
         })
