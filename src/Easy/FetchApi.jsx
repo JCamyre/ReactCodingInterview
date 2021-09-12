@@ -62,7 +62,7 @@ function FetchApi() {
 
             {
                 users.map((element, index) => (
-                    <h2>{element}</h2>
+                    <h2>{element.name.first}</h2>
                 ))
             }
 
