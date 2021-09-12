@@ -16,6 +16,8 @@ function fetchData() { // could do const fetchData = () => {}
 
 function FetchApi() {
     const [userLocations, setUserLocations] = useState([]);
+    // Back to scuffed because it broke for some reason
+    const [columns, setColumns] = useState([]);
 
     // on page load: run fetchData()
     // .then() => {} takes care of the promisers, listeners, async/await, all that crud (create, read, update, delete). LOLL!
@@ -35,6 +37,7 @@ function FetchApi() {
                 'name': name, 'description': description, 'offset': offset};
                 apiUsers[i] = location;
             }
+            setColumns(Object.keys(apiUsers[0]));
             setUserLocations(apiUsers);
         })
     }, []);
@@ -45,9 +48,9 @@ function FetchApi() {
     return (
         <div>
             <table>
-                <thead>
+                <thead style={{fontSize: '24px', fontWeight: 'bold'}}>
                     <tr>
-                        {Object.keys(userLocations[0]).map((column, idx) => (
+                        {columns.map((column, idx) => (
                             <td index={idx}>
                                 {column}
                             </td>
@@ -57,7 +60,16 @@ function FetchApi() {
                 <tbody>
                         {userLocations.map((location, idx) => (
                             <tr key={idx}>
+                                <td>{location['city']}</td>
                                 <td>{location['longitude']}</td>
+                                <td>{location['latitude']}</td>
+                                <td>{location['country']}</td>
+                                <td>{location['postcode']}</td>
+                                <td>{location['state']}</td>
+                                <td>{location['number']}</td>
+                                <td>{location['name']}</td>
+                                <td>{location['description']}</td>
+                                <td>{location['offset']}</td>
                             </tr>
                         ))}
                 </tbody>
