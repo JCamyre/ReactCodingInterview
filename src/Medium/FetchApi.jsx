@@ -14,6 +14,34 @@ function fetchData() { // could do const fetchData = () => {}
     });
 }
 
+// function compare(key, a, b) {
+//     console.log(a, b, key);
+//     if (b[key] > a[key]) {
+//         return -1;
+//     } else if (a[key] > b[key]) {
+//         return 1;
+//     } else {
+//         return 0;
+//     }
+// }
+
+function sortColumns(userLocations, setUserLocations, column) {
+    console.log(userLocations, column);
+    // I would like compare to be its own separate function, but I need to be able to choose what key to use
+    userLocations.sort(function(a, b) {
+        if (b[column] > a[column]) {
+            return -1;
+        } else if (a[column] > b[column]) {
+            return 1;
+        } else {
+            return 0;
+        }});
+
+    console.log(userLocations);
+
+    setUserLocations(userLocations);
+}
+
 function FetchApi() {
     const [userLocations, setUserLocations] = useState([]);
     // Back to scuffed because it broke for some reason
@@ -58,13 +86,17 @@ function FetchApi() {
                     {/* Object.keys(columnHeaders[0]) */}
                         {columnHeaders.map((column, columnIdx) => (
                                 <td index={columnIdx}>
-                                    {column}
+                                    <button onClick={() => {
+                                        sortColumns(userLocations, setUserLocations, column);
+                                    }}>
+                                        {column}
+                                    </button>
                                 </td>
                             ))}
                     </tr>
                 </thead>
                 <tbody>
-                        {/* I did this so badly lol. Redoing. */}
+                        
                         {userLocations.map((location, idx) => (
                             <tr key={idx}>
                                 {columnHeaders.map((column, idx) => (
