@@ -14,38 +14,27 @@ function fetchData() { // could do const fetchData = () => {}
     });
 }
 
-// function compare(key, a, b) {
-//     console.log(a, b, key);
-//     if (b[key] > a[key]) {
-//         return -1;
-//     } else if (a[key] > b[key]) {
-//         return 1;
-//     } else {
-//         return 0;
-//     }
-// }
-
-function sortColumns(userLocations, setUserLocations, column) {
-    console.log(userLocations, column);
-    // I would like compare to be its own separate function, but I need to be able to choose what key to use
-    userLocations.sort(function(a, b) {
-        if (b[column] > a[column]) {
-            return -1;
-        } else if (a[column] > b[column]) {
-            return 1;
-        } else {
-            return 0;
-        }});
-
-    console.log(userLocations);
-
-    setUserLocations(userLocations);
-}
 
 function FetchApi() {
     const [userLocations, setUserLocations] = useState([]);
     // Back to scuffed because it broke for some reason
     const [columnHeaders, setColumnHeaders] = useState([]);
+
+    const sortColumns = (column) => {
+        // I would like compare to be its own separate function, but I need to be able to choose what key to use
+        console.log(userLocations);
+
+        userLocations.sort(function(a, b) {
+            if (b[column] > a[column]) { 
+                return -1;
+            } else if (a[column] > b[column]) {
+                return 1;
+            } else {
+                return 0;
+            }});
+        
+        setUserLocations(userLocations);
+    }
 
     // on page load: run fetchData()
     // .then() => {} takes care of the promisers, listeners, async/await, all that crud (create, read, update, delete). LOLL!
@@ -85,18 +74,16 @@ function FetchApi() {
                     <tr>
                     {/* Object.keys(columnHeaders[0]) */}
                         {columnHeaders.map((column, columnIdx) => (
-                                <td index={columnIdx}>
-                                    <button onClick={() => {
-                                        sortColumns(userLocations, setUserLocations, column);
+                                <th key={columnIdx} 
+                                    onClick={() => {
+                                        sortColumns(column);
                                     }}>
-                                        {column}
-                                    </button>
-                                </td>
+                                    {column}
+                                </th>
                             ))}
                     </tr>
                 </thead>
                 <tbody>
-                        
                         {userLocations.map((location, idx) => (
                             <tr key={idx}>
                                 {columnHeaders.map((column, idx) => (
